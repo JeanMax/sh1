@@ -6,7 +6,7 @@
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 07:40:00 by mcanal            #+#    #+#             */
-/*   Updated: 2015/01/23 18:34:39 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/01/23 22:22:37 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ void		ft_cd(char **av, t_env *e)
 	else
 		go_to(av[1], e);
 	pwd = ft_strdup(getcwd(buf, PATH_SIZE));
-	if (!(av = set_av("PWD", strncmp(pwd, "/Volumes/Data", 13) ?
+	if (!(av = set_av("PWD", ft_strncmp(pwd, "/Volumes/Data", 13) ?
 						pwd : pwd + 13, e, 1)))
 		return ;
 	launch_builtin(2, av, e->env, e);
