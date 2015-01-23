@@ -6,7 +6,7 @@
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 07:42:03 by mcanal            #+#    #+#             */
-/*   Updated: 2015/01/13 07:08:45 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/01/19 17:14:07 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 
 static char		**check_cmd(char **av)
 {
-	//DEBUG; //debug
 	int	i;
 
 	i = 1;
@@ -39,7 +38,6 @@ static char		**check_cmd(char **av)
 
 static char		**cpy_env(char **ae)
 {
-	//DEBUG; //debug
 	int		i;
 	char	**new_env;
 
@@ -68,7 +66,6 @@ static void		list_env(char *s, t_env *e)
 
 static void		edit_env(char **av, char **ae, t_env *e)
 {
-	//DEBUG; //debug
 	int		i;
 	int		j;
 	int		count;
@@ -87,10 +84,8 @@ static void		edit_env(char **av, char **ae, t_env *e)
 			j = 0;
 			while (ae[j] && ft_strncmp(ae[j], env_var, ft_strlen(env_var)))
 				j++;
-			if (!ae[j])
-				list_env(av[i], e);
-			else
-				ae[j] = ft_strdup(av[i]);
+			!ae[j] ? list_env(av[i], e) : NULL;
+			ae[j] = ae[j] ? ft_strdup(av[i]) : ae[j];
 			ft_memdel((void *)&env_var);
 		}
 		i++;
@@ -99,7 +94,6 @@ static void		edit_env(char **av, char **ae, t_env *e)
 
 void			ft_env(char **av, char **ae, t_env *e)
 {
-	//DEBUG; //debug
 	int		i;
 	char	**cmd;
 	char	**new_ae;
@@ -122,7 +116,7 @@ void			ft_env(char **av, char **ae, t_env *e)
 	if (cmd)
 		call_execve(cmd[0], &cmd[0], new_ae, e);
 	if (new_ae)
-		free_tab(new_ae);
+		ft_freetab(new_ae);
 	if (e->first_l)
-		ft_lfree(&(e->first_l));
+		ft_lclean(&(e->first_l));
 }

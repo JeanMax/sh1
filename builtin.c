@@ -6,7 +6,7 @@
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 08:00:25 by mcanal            #+#    #+#             */
-/*   Updated: 2015/01/14 04:04:48 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/01/20 13:15:22 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,8 @@
 
 void	launch_builtin(int b, char **av, char **ae, t_env *e)
 {
-	//DEBUG; //debug
 	if (b == 5)
-		ft_exit();
+		ft_exit(0, av);
 	else if (b == 4)
 		ft_env(av, ae, e);
 	else if (b == 3)

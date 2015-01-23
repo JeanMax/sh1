@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_all.c                                          :+:      :+:    :+:   */
+/*   get_line.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcanal <zboub@42.fr>                       +#+  +:+       +#+        */
+/*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/12/14 03:51:51 by mcanal            #+#    #+#             */
-/*   Updated: 2015/01/10 01:14:17 by mcanal           ###   ########.fr       */
+/*   Created: 2015/01/15 03:55:50 by mcanal            #+#    #+#             */
+/*   Updated: 2015/01/23 19:16:28 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-** Read all the text in the specified file descriptor and fill a given string.
+** Read the first line in the specified file descriptor and fill a given string.
 ** Return 0 if fail, else 1.
 */
 
 #include "libft.h"
 #include <unistd.h>
 
-int		get_all(int const fd, char **a)
+int	get_line(int const fd, char **a)
 {
 	int		i;
+	int		stop;
 	char	buf[BUFF_SIZE];
 
 	if (!a || fd < 0)
@@ -31,7 +32,10 @@ int		get_all(int const fd, char **a)
 		buf[i] = '\0';
 		*a = (char *)ft_realloc((void *)*a, ft_strlen(*a), ft_strlen(*a) + i);
 		ft_strcat(*a, buf);
+		if ((stop = ft_strindex(*a, '\n')) != -1)
+			break ;
 	}
+	*a = ft_realloc((void *)*a, ft_strlen(*a), stop);
 	if (!*a || i < 0)
 		return (0);
 	return (1);

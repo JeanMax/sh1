@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstinser.c                                      :+:      :+:    :+:   */
+/*   ft_freetab.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcanal <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/11/11 04:40:23 by mcanal            #+#    #+#             */
-/*   Updated: 2014/11/12 23:17:59 by mcanal           ###   ########.fr       */
+/*   Created: 2015/01/15 03:58:41 by mcanal            #+#    #+#             */
+/*   Updated: 2015/01/15 04:06:36 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-** insère un élément (new) après l'élément courant (alst).
+** free a char * tab
 */
 
 #include "libft.h"
 
-void	ft_lstinser(t_list **alst, t_list *new)
+void	ft_freetab(char **tab)
 {
-	if (!alst || !new)
-		return ;
-	new->next = (*alst)->next;
-	(*alst)->next = new;
+	int	i;
+
+	i = 0;
+	while (tab[i])
+		ft_memdel((void *)&tab[i++]);
+	ft_memdel((void *)&tab);
 }

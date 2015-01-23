@@ -6,7 +6,7 @@
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 07:46:30 by mcanal            #+#    #+#             */
-/*   Updated: 2015/01/14 04:01:09 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/01/20 16:05:13 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,21 +26,21 @@ char	*get_env(char *var, t_env *e)
 	int		len;
 	char	*ret;
 
-    ae = e->env;
-    i = 0;
+	ae = e->env;
+	i = 0;
 	len = ft_strlen(var);
-    while (ae[i] && ft_strncmp(ae[i], var, len))
-        i++;
-    if (!ae[i])
-        return (NULL);
-	ret = ft_strdup(ae[i]);
-	ret += (len + 1);
+	while (ae[i] && ft_strncmp(ae[i], var,
+								(int)ft_strlen(var) > ft_strindex(ae[i], '=') ?
+								(int)ft_strlen(var) : ft_strindex(ae[i], '=')))
+		i++;
+	if (!ae[i])
+		return (ft_strnew(1));
+	ret = ft_strdup(ae[i] + len + 1);
 	return (ret);
 }
 
 void	get_path(char **ae, t_env *e)
 {
-	//DEBUG; //debug
 	char	*tmp;
 	int		i;
 
@@ -48,7 +48,7 @@ void	get_path(char **ae, t_env *e)
 	while (ae[i])
 	{
 		if (ae[i][0] == 'P' && ae[i][1] == 'A' && ae[i][2] == 'T' && \
-           ae[i][3] == 'H' && ae[i][4] == '=')
+				ae[i][3] == 'H' && ae[i][4] == '=')
 			break ;
 		i++;
 	}
@@ -63,7 +63,6 @@ void	get_path(char **ae, t_env *e)
 
 void	get_builtin(t_env *e)
 {
-	//DEBUG; //debug
 	e->builtin = malloc(6 * sizeof(char *));
 	(e->builtin)[0] = ft_strdup("cd");
 	(e->builtin)[1] = ft_strdup("setenv");

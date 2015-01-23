@@ -6,7 +6,7 @@
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 07:41:27 by mcanal            #+#    #+#             */
-/*   Updated: 2015/01/13 08:06:27 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/01/20 13:33:49 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,15 @@
 
 #include "header.h"
 
-void	del_env(char *to_del, char **ae, t_env *e)
+void	del_env(char *del, char **ae, t_env *e)
 {
-	//DEBUG; //debug
 	int	j;
 
 	j = 0;
-	while (ae[j] && ft_strncmp(ae[j], to_del, ft_strlen(to_del)))
-        j++;
+	while (ae[j] && ft_strncmp(ae[j], del,
+								(int)ft_strlen(del) > ft_strindex(ae[j], '=') ?
+								(int)ft_strlen(del) : ft_strindex(ae[j], '=')))
+		j++;
 	while (ae[j + 1])
 	{
 		ae[j] = ft_strdup(ae[j + 1]);
@@ -33,9 +34,8 @@ void	del_env(char *to_del, char **ae, t_env *e)
 	e->env = ae;
 }
 
-void    ft_unsetenv(char **av, char **ae, t_env *e)
+void	ft_unsetenv(char **av, char **ae, t_env *e)
 {
-	//DEBUG; //debug
 	int	i;
 
 	if (!av[1])

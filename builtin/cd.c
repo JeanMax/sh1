@@ -6,7 +6,7 @@
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 07:40:00 by mcanal            #+#    #+#             */
-/*   Updated: 2015/01/14 05:27:42 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/01/23 18:34:39 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,102 +14,124 @@
 ** cd builtin
 */
 
+#include <sys/stat.h>
 #include "header.h"
 
 static char	**set_av(char *s1, char *s2, t_env *e, int go)
 {
-	//DEBUG; //debug
-	char	**av;
-	char	*var;
+	char		**av;
+	struct stat	s;
 
 	av = malloc(sizeof(char *) * 4);
 	av[0] = ft_strdup("setenv");
 	av[1] = ft_strdup(s1);
-	if (!ft_strcmp(s2, "PWD") || !ft_strcmp(s2, "OLDPWD") || !ft_strcmp(s2, "HOME"))
+	if (!ft_strcmp(s2, "PWD") || !ft_strcmp(s2, "OLDPWD") ||
+		!ft_strcmp(s2, "HOME"))
 	{
-		if (!(var = get_env(s2, e)))
+		if (!(s2 = get_env(s2, e)))
 			return (NULL);
 	}
-	else
-		var = s2;
-	av[2] = ft_strdup(var);
+	av[2] = ft_strdup(s2);
 	av[3] = ft_strnew(1);
 	av[3] = NULL;
 	if (go)
-		if (chdir(var) < 0)
+		if (chdir(s2) < 0)
 		{
-			ft_putstr("cd: no such file or directory: ");
-			ft_putendl(var); //todo : show compressed (zboub instead of /rgdrg/eg/zboub)
+			ft_putstr(stat(s2, &s) ? \
+				"cd: no such file or directory: " : "cd: not a directory: ");
+			ft_putendl(ft_strrindex(s2, '/') != (int)ft_strlen(s2) - 1 ?
+						s2 + ft_strrindex(s2, '/') + 1 : s2);
 		}
 	return (av);
 }
 
 static void	go_home(t_env *e)
 {
-	//DEBUG; //debug
 	char	**av;
+	char	*home;
+	char	*pwd;
 
-	if (!(av = set_av("OLDPWD", "PWD", e, 0)))
+	home = get_env("HOME", e);
+	pwd = get_env("PWD", e);
+	if (!(av = set_av("OLDPWD", pwd, e, 0)))
 		return ;
 	launch_builtin(2, av, e->env, e);
-	free_tab(av);
-	if (!ft_strcmp(get_env("PWD", e), get_env("HOME", e)))
+	ft_freetab(av);
+	if (!ft_strcmp(pwd, home))
+	{
+		ft_memdel((void *)&home);
+		ft_memdel((void *)&pwd);
 		return ;
-	if (!(av = set_av("PWD", "HOME", e, 1)))
+	}
+	if (!(av = set_av("PWD", home, e, 1)))
 		return ;
-	free_tab(av);
+	ft_memdel((void *)&home);
+	ft_memdel((void *)&pwd);
+	ft_freetab(av);
 }
 
 static void go_previous(t_env *e)
 {
-	//DEBUG; //debug
 	char	**av1;
 	char	**av2;
+	char	*oldpwd;
+	char	*home;
+	char	*to_free;
 
-	ft_putendl(get_env("OLDPWD", e)); //todo : show compressed (~/zboub)
-	if (!ft_strcmp(get_env("PWD", e), get_env("OLDPWD", e)))
-		return ;
+	oldpwd = get_env("OLDPWD", e);
+	to_free = oldpwd;
+	home = get_env("HOME", e);
+	if (strstr(oldpwd, home))
+	{
+		oldpwd += ft_strlen(home) - 1;
+		oldpwd[0] = '~';
+	}
+	oldpwd += ft_strnstr(oldpwd, "/private/", 9) ? 8 : 0;
+	ft_putendl(oldpwd);
 	if (!(av1 = set_av("OLDPWD", "PWD", e, 0)))
 		return ;
 	if (!(av2 = set_av("PWD", "OLDPWD", e, 1)))
 		return ;
 	launch_builtin(2, av1, e->env, e);
-	free_tab(av1);
-	free_tab(av2);
+	ft_memdel((void *)&home);
+	ft_memdel((void *)&to_free);
+	ft_freetab(av1);
+	ft_freetab(av2);
 }
 
-static void go_to(char *path, t_env *e)
+static void	go_to(char *path, t_env *e)
 {
-	//DEBUG; //debug
 	char	**av;
 	char	*pwd;
 	char	*tmp;
+	char	free_it;
 
+	free_it = '\0';
 	pwd = get_env("PWD", e);
 	if (path[0] != '/' && path[0] != '~')
 	{
 		tmp = ft_strjoin(pwd, "/");
 		path = ft_strjoin(tmp, path);
 		ft_memdel((void *)&tmp);
+		free_it = 'f';
 	}
-	if (!ft_strcmp(pwd, path))
+	if (!(av = set_av("OLDPWD", pwd, e, 0)))
 		return ;
-	if (!(av = set_av("OLDPWD", "PWD", e, 0)))
-		return ;
+	ft_memdel((void *)&pwd);
 	launch_builtin(2, av, e->env, e);
-	free_tab(av);
+	ft_freetab(av);
 	if (!(av = set_av("PWD", path, e, 1)))
 		return ;
-	free_tab(av);
-	ft_memdel((void *)&path);
+	ft_freetab(av);
+	if (free_it)
+		ft_memdel((void *)&path);
 }
 
-void	ft_cd(char **av, t_env *e)
+void		ft_cd(char **av, t_env *e)
 {
-	//DEBUG; //debug
-	int		ac;
-	char	buf[PATH_SIZE];
-	char	*pwd;
+	int			ac;
+	char		buf[PATH_SIZE];
+	char		*pwd;
 
 	ac = 0;
 	while (av[ac])
@@ -126,10 +148,10 @@ void	ft_cd(char **av, t_env *e)
 	else
 		go_to(av[1], e);
 	pwd = ft_strdup(getcwd(buf, PATH_SIZE));
-	if (!strncmp(pwd, "/Volumes/Data", 13))
-		pwd += 13;
-	if (!(av = set_av("PWD", pwd, e, 1)))
+	if (!(av = set_av("PWD", strncmp(pwd, "/Volumes/Data", 13) ?
+						pwd : pwd + 13, e, 1)))
 		return ;
 	launch_builtin(2, av, e->env, e);
-	free_tab(av);
+	ft_memdel((void *)&pwd);
+	ft_freetab(av);
 }

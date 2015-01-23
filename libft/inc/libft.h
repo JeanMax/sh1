@@ -6,7 +6,7 @@
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/03 14:13:23 by mcanal            #+#    #+#             */
-/*   Updated: 2015/01/09 05:13:31 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/01/15 04:02:36 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	ft_debugstr(char *name, char *str);
 void	ft_debugnbr(char *name, int nbr);
 int		get_all(int const fd, char **a);
 int		get_next_line(int const fd, char **line);
+int		get_line(int const fd, char **a);
 
 /*
 ** is
@@ -111,6 +112,7 @@ void	ft_lclean(t_lst **alst);
 ** mem
 */
 void	ft_bzero(void *s, size_t n);
+void	ft_freetab(char **tab);
 void	ft_memdel(void **ap);
 void	*ft_memalloc(size_t size);
 void	*ft_memccpy(void *dest, const void *src, int c, size_t n);

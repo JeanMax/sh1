@@ -6,16 +6,16 @@
 #    By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/29 13:16:03 by mcanal            #+#    #+#              #
-#    Updated: 2015/01/14 02:38:28 by mcanal           ###   ########.fr        #
+#    Updated: 2015/01/23 21:30:29 by mcanal           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 NAME = ft_minishell1
 
-SRCC = 	main.c				signal.c			error.c				\
-		fill_env.c			builtin.c								\
-		builtin/exit.c		builtin/env.c		 builtin/setenv.c	\
-		builtin/unsetenv.c	builtin/cd.c
+SRCC = 	main.c				error.c				fill_env.c			\
+		builtin.c			builtin/exit.c		builtin/env.c		\
+		builtin/unsetenv.c	builtin/cd.c		builtin/setenv.c	\
+		exec_and_sig.c
 
 SRCO = zboub
 
