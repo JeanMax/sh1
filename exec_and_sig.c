@@ -6,7 +6,7 @@
 /*   By: mcanal <zboub@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/23 21:32:33 by mcanal            #+#    #+#             */
-/*   Updated: 2015/01/23 22:04:50 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/01/23 23:11:27 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,10 @@ void		prompt_loop(int ac, char **av, char **ae)
 			ft_exit(0, av);
 		cmd = ft_strsplit(line, ' ');
 		i = 0;
-		while (i != 6 && cmd[0])
+		while (i != 7 && cmd[0])
 			if (!ft_strcmp((e.builtin)[i++], cmd[0]))
 				break ;
-		if (i != 6)
+		if (i != 7)
 			launch_builtin(i, &cmd[0], e.env, &e);
 		else if (cmd)
 			call_execve(cmd[0], &cmd[0], e.env, &e);
