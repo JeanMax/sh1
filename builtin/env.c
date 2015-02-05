@@ -6,7 +6,7 @@
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 07:42:03 by mcanal            #+#    #+#             */
-/*   Updated: 2015/01/19 17:14:07 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/01/30 22:48:31 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 */
 
 #include "header.h"
-#include <stdlib.h>
 
 static char		**check_cmd(char **av)
 {
@@ -34,26 +33,6 @@ static char		**check_cmd(char **av)
 		return (av += i);
 	else
 		return (NULL);
-}
-
-static char		**cpy_env(char **ae)
-{
-	int		i;
-	char	**new_env;
-
-	i = 0;
-	while (ae[i])
-		i++;
-	new_env = malloc((i + 1) * sizeof(char *));
-	i = 0;
-	while (ae[i])
-	{
-		new_env[i] = ft_strdup(ae[i]);
-		i++;
-	}
-	new_env[i] = ft_strnew(1);
-	new_env[i] = NULL;
-	return (new_env);
 }
 
 static void		list_env(char *s, t_env *e)
@@ -92,7 +71,7 @@ static void		edit_env(char **av, char **ae, t_env *e)
 	}
 }
 
-void			ft_env(char **av, char **ae, t_env *e)
+void			ft_env(char **av, t_env *e)
 {
 	int		i;
 	char	**cmd;
@@ -102,7 +81,7 @@ void			ft_env(char **av, char **ae, t_env *e)
 	i = 0;
 	e->first_l = NULL;
 	cmd = check_cmd(av);
-	new_ae = cpy_env(ae);
+	new_ae = cpy_env(e->env, NULL);
 	edit_env(av, new_ae, e);
 	if (!cmd && new_ae)
 		while (new_ae[i])
@@ -113,10 +92,10 @@ void			ft_env(char **av, char **ae, t_env *e)
 		ft_putendl(tmp->env);
 		tmp = tmp->next;
 	}
-	if (cmd)
-		call_execve(cmd[0], &cmd[0], new_ae, e);
-	if (new_ae)
-		ft_freetab(new_ae);
-	if (e->first_l)
-		ft_lclean(&(e->first_l));
+	av = e->env;
+	e->env = new_ae;
+	cmd ? fork_it(&cmd[0], e) : 0;
+	e->env = av;
+	new_ae ? ft_freetab(new_ae) : 0;
+	e->first_l ? ft_lclean(&(e->first_l)) : 0;
 }

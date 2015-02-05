@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_and_sig.c                                     :+:      :+:    :+:   */
+/*   fork_and_sig.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mcanal <zboub@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/23 21:32:33 by mcanal            #+#    #+#             */
-/*   Updated: 2015/01/23 23:11:27 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/02/05 18:51:33 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,32 +19,14 @@
 
 pid_t			g_pid1;
 pid_t			g_pid2;
+t_env			*g_env;
 
-void			call_execve(char *cmd, char **av, char **ae, t_env *e)
+void			fork_it(char **cmd, t_env *e)
 {
-	int		i;
-	char	*join;
-	char	*tmp;
-
-	if (!(g_pid2 = fork()))
-	{
-		if ((execve(cmd, av, ae)) < 0)
-		{
-			(cmd[0] == '.' && cmd[1] == '/') ? error("exe", cmd) : NULL;
-			i = 0;
-			while ((e->path)[i])
-			{
-				tmp = ft_strjoin((e->path)[i++], "/");
-				join = ft_strjoin(tmp, cmd);
-				ft_memdel((void *)&tmp);
-				((execve(join, av, ae)) >= 0) ? ft_memdel((void *)&join) : NULL;
-				if ((execve(join, av, ae)) >= 0)
-					break ;
-				ft_memdel((void *)&join);
-			}
-			error("cmd", cmd);
-		}
-	}
+	if ((g_pid2 = fork()) < 0)
+		error("Fork", NULL);
+	else if (!g_pid2)
+		call_execve(cmd, e);
 	else
 		wait(NULL);
 }
@@ -60,16 +42,17 @@ static void		sig_handl(int sig)
 	else if (sig == SIGINT)
 	{
 		ft_putstr("\b \b\b \b\n");
-		if (g_pid1 == g_pid2 || !g_pid1)
-			PROMPT;
+		if (g_pid1 == g_pid2 || (!g_pid1 && !g_pid2))
+			prompt(g_env);
 		g_pid1 = g_pid2;
 	}
 	else if (sig == 29)
-		PROMPT;
+		prompt(g_env);
 }
 
-static	void	init(char **av, char **ae, t_env *e)
+void			init(int ac, char **ae, t_env *e)
 {
+	ac > 1 ? error("arg", NULL) : 0;
 	signal(SIGINT, sig_handl);
 	signal(SIGFPE, sig_handl);
 	signal(29, sig_handl);
@@ -77,37 +60,42 @@ static	void	init(char **av, char **ae, t_env *e)
 	signal(SIGBUS, sig_handl);
 	signal(SIGTSTP, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
-	get_path(&ae[0], e);
-	get_builtin(e);
 	e->env = ae;
-	call_execve("clear", av, e->env, e);
+	get_path(e);
+	get_builtin(e);
+	g_env = e;
+	ft_putstr("\033[2J\033[1;1H");
 }
 
-void		prompt_loop(int ac, char **av, char **ae)
+void			launch_cmd(char **cmd, t_env *e)
+{
+	int	i;
+
+	i = 0;
+	if (!cmd[0])
+		return ;
+	while (cmd[i])
+		if (ft_strchr(cmd[i], '>') || ft_strchr(cmd[i], '<')\
+			|| ft_strchr(cmd[i++], '|'))
+			return ;
+	is_builtin(cmd, e) ? launch_builtin(cmd, e) : fork_it(cmd, e);
+}
+
+void			prompt_loop(char **av, t_env *e)
 {
 	char	*line;
 	char	**cmd;
-	t_env	e;
-	int		i;
 
-	ac > 1 ? error("arg", NULL) : 0;
-	init(av, ae, &e);
 	while (42)
 	{
-		PROMPT;
+		prompt(e);
 		g_pid1 = g_pid2;
-		if (!get_line(0, &line))
-			ft_exit(0, av);
+		get_line(0, &line) ? NULL : ft_exit(0, av);
+		if (ft_strindex(line, ';') != -1)
+			continue ;
 		cmd = ft_strsplit(line, ' ');
-		i = 0;
-		while (i != 7 && cmd[0])
-			if (!ft_strcmp((e.builtin)[i++], cmd[0]))
-				break ;
-		if (i != 7)
-			launch_builtin(i, &cmd[0], e.env, &e);
-		else if (cmd)
-			call_execve(cmd[0], &cmd[0], e.env, &e);
+		launch_cmd(cmd, e);
 		ft_memdel((void *)&line);
-		ft_freetab(cmd);
+		cmd[0] ? ft_freetab(cmd) : NULL;
 	}
 }

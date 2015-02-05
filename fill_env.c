@@ -6,7 +6,7 @@
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 07:46:30 by mcanal            #+#    #+#             */
-/*   Updated: 2015/01/23 23:10:14 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/02/05 18:53:40 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,28 @@
 */
 
 #include "header.h"
-#include <stdlib.h>
+
+char	**cpy_env(char **ae, char *val)
+{
+	int		i;
+	char	**new_env;
+
+	i = 0;
+	while (ae[i])
+		i++;
+	new_env = malloc((i + (val ? 2 : 1)) * sizeof(char *));
+	i = 0;
+	while (ae[i])
+	{
+		new_env[i] = ft_strdup(ae[i]);
+		i++;
+	}
+	if (val)
+		new_env[i] = ft_strdup(val);
+	new_env[i + (val ? 1 : 0)] = ft_strnew(1);
+	new_env[i + (val ? 1 : 0)] = NULL;
+	return (new_env);
+}
 
 char	*get_env(char *var, t_env *e)
 {
@@ -39,25 +60,24 @@ char	*get_env(char *var, t_env *e)
 	return (ret);
 }
 
-void	get_path(char **ae, t_env *e)
+void	get_path(t_env *e)
 {
 	char	*tmp;
 	int		i;
 
 	i = 0;
-	while (ae[i])
+	while ((e->env)[i])
 	{
-		if (ae[i][0] == 'P' && ae[i][1] == 'A' && ae[i][2] == 'T' && \
-				ae[i][3] == 'H' && ae[i][4] == '=')
+		if ((e->env)[i][0] == 'P' && (e->env)[i][1] == 'A' &&\
+			(e->env)[i][2] == 'T' && (e->env)[i][3] == 'H' &&\
+			(e->env)[i][4] == '=')
 			break ;
 		i++;
 	}
-	if (!ae[i])
+	if (!(e->env)[i])
 		error("path", NULL);
-	tmp = ft_strdup(ae[i]);
-	tmp += 5;
-	e->path = ft_strsplit(tmp, ':');
-	tmp -= 5;
+	tmp = ft_strdup((e->env)[i]);
+	e->path = ft_strsplit(tmp + 5, ':');
 	ft_memdel((void *)&tmp);
 }
 

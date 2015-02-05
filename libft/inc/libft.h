@@ -6,7 +6,7 @@
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/03 14:13:23 by mcanal            #+#    #+#             */
-/*   Updated: 2015/01/15 04:02:36 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/02/05 17:38:46 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void	ft_putchar(char c);
 void	ft_putchar_fd(char c, int fd);
 void	ft_putendl(char const *s);
 void	ft_putendl_fd(char const *s, int fd);
+void	fail(char *s);
+void	failn(char *s);
 void	ft_putnbr(int nbr);
 void	ft_putnbr_fd(int n, int fd);
 void	ft_putstr(char const *s);

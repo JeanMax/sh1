@@ -1,26 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   failn.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/01/10 00:12:49 by mcanal            #+#    #+#             */
-/*   Updated: 2015/01/30 22:48:10 by mcanal           ###   ########.fr       */
+/*   Created: 2015/02/05 17:38:02 by mcanal            #+#    #+#             */
+/*   Updated: 2015/02/05 17:38:21 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-** this is the main...
+** print a string on stderr, then a \n
 */
 
-#include "header.h"
+#include "libft.h"
 
-int				main(int ac, char **av, char **ae)
+void	failn(char *s)
 {
-	t_env	e;
-
-	init(ac, ae, &e);
-	prompt_loop(av, &e);
-	return (0);
+	ft_putendl_fd(s, 2);
 }
