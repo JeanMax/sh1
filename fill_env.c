@@ -6,7 +6,7 @@
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 07:46:30 by mcanal            #+#    #+#             */
-/*   Updated: 2015/02/06 18:15:47 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/02/06 19:55:21 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,5 @@ void	get_builtin(t_env *e)
 	(e->builtin)[2] = ft_strdup("unsetenv");
 	(e->builtin)[3] = ft_strdup("env");
 	(e->builtin)[4] = ft_strdup("exit");
-	(e->builtin)[5] = ft_strdup("echo");
-	(e->builtin)[6] = ft_strnew(1);
+	(e->builtin)[5] = ft_strnew(1);
 }

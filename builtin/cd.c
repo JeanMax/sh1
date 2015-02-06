@@ -6,7 +6,7 @@
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 07:40:00 by mcanal            #+#    #+#             */
-/*   Updated: 2015/02/06 17:50:53 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/02/06 19:58:12 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,10 +111,9 @@ void		ft_cd(char **av, t_env *e)
 	ac > 2 ? ft_putendl("cd: Too many arguments.") : NULL;
 	if (ac > 2)
 		return ;
-	(ac == 1 || !ft_strcmp(av[1], "~")) ? go_home(e) : NULL;
+	ac == 1 ? go_home(e) : NULL;
 	(ac > 1 && !ft_strcmp(av[1], "-")) ? go_previous(e) : NULL;
-	if (ac > 1 && ft_strcmp(av[1], "-") && ft_strcmp(av[1], "~"))
-		go_to(av[1], e);
+	(ac > 1 && ft_strcmp(av[1], "-")) ? go_to(av[1], e) : NULL;
 	pwd = ft_strdup(getcwd(buf, PATH_SIZE));
 	home = get_env("HOME", e);
 	if (!(av = set_av("PWD", (ft_strncmp(pwd, "/Volumes/Data", 13) ||\
