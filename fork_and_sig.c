@@ -6,7 +6,7 @@
 /*   By: mcanal <zboub@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/23 21:32:33 by mcanal            #+#    #+#             */
-/*   Updated: 2015/02/06 19:57:00 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/02/06 22:53:50 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void			fork_it(char **cmd, t_env *e)
 
 static void		sig_handl(int sig)
 {
+	ft_debugnbr("sig", sig);  //debug
 	if (sig == SIGBUS)
 		error("bus", NULL);
 	else if (sig == SIGSEGV)

@@ -6,7 +6,7 @@
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 07:46:30 by mcanal            #+#    #+#             */
-/*   Updated: 2015/02/06 20:12:05 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/02/06 22:41:56 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	**set_av(char *s1, char *s2, t_env *e, int go)
 char	**cpy_env(char **ae, char *val)
 {
 	int		i;
-	char	**new_env;
+ 	char	**new_env;
 
 	i = 0;
 	while (ae[i])
