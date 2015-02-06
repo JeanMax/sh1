@@ -6,7 +6,7 @@
 #    By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/29 13:16:03 by mcanal            #+#    #+#              #
-#    Updated: 2015/02/05 18:45:08 by mcanal           ###   ########.fr        #
+#    Updated: 2015/02/06 16:38:38 by mcanal           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -14,6 +14,7 @@ NAME = ft_minishell1
 
 SRCC = 	main.c				error.c				fill_env.c			\
 		fork_and_sig.c		prompt.c			exec.c				\
+		semicolon.c			split_it.c								\
 		builtin/builtin.c	builtin/exit.c		builtin/env.c		\
 		builtin/unsetenv.c	builtin/cd.c		builtin/setenv.c	\
 

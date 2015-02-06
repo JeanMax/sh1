@@ -6,7 +6,7 @@
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 07:46:30 by mcanal            #+#    #+#             */
-/*   Updated: 2015/02/05 18:53:40 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/02/06 18:15:47 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,34 @@
 */
 
 #include "header.h"
+
+char	**set_av(char *s1, char *s2, t_env *e, int go)
+{
+	char		**av;
+	struct stat	s;
+
+	av = malloc(sizeof(char *) * 4);
+	av[0] = ft_strdup("setenv");
+	av[1] = ft_strdup(s1);
+	if (!ft_strcmp(s2, "PWD") || !ft_strcmp(s2, "OLDPWD") ||
+		!ft_strcmp(s2, "HOME"))
+	{
+		if (!(s2 = get_env(s2, e)))
+			return (NULL);
+	}
+	av[2] = ft_strdup(s2);
+	av[3] = ft_strnew(1);
+	av[3] = NULL;
+	if (go)
+		if (chdir(s2) < 0)
+		{
+			ft_putstr(stat(s2, &s) ? \
+				"cd: no such file or directory: " : "cd: not a directory: ");
+			ft_putendl(ft_strrindex(s2, '/') != (int)ft_strlen(s2) - 1 ?
+						s2 + ft_strrindex(s2, '/') + 1 : s2);
+		}
+	return (av);
+}
 
 char	**cpy_env(char **ae, char *val)
 {

@@ -6,7 +6,7 @@
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 07:40:00 by mcanal            #+#    #+#             */
-/*   Updated: 2015/01/28 17:30:32 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/02/06 17:50:53 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,34 +15,6 @@
 */
 
 #include "header.h"
-
-static char	**set_av(char *s1, char *s2, t_env *e, int go)
-{
-	char		**av;
-	struct stat	s;
-
-	av = malloc(sizeof(char *) * 4);
-	av[0] = ft_strdup("setenv");
-	av[1] = ft_strdup(s1);
-	if (!ft_strcmp(s2, "PWD") || !ft_strcmp(s2, "OLDPWD") ||
-		!ft_strcmp(s2, "HOME"))
-	{
-		if (!(s2 = get_env(s2, e)))
-			return (NULL);
-	}
-	av[2] = ft_strdup(s2);
-	av[3] = ft_strnew(1);
-	av[3] = NULL;
-	if (go)
-		if (chdir(s2) < 0)
-		{
-			ft_putstr(stat(s2, &s) ? \
-				"cd: no such file or directory: " : "cd: not a directory: ");
-			ft_putendl(ft_strrindex(s2, '/') != (int)ft_strlen(s2) - 1 ?
-						s2 + ft_strrindex(s2, '/') + 1 : s2);
-		}
-	return (av);
-}
 
 static void	go_home(t_env *e)
 {
@@ -131,26 +103,25 @@ void		ft_cd(char **av, t_env *e)
 	int			ac;
 	char		buf[PATH_SIZE];
 	char		*pwd;
+	char		*home;
 
 	ac = 0;
 	while (av[ac])
 		ac++;
+	ac > 2 ? ft_putendl("cd: Too many arguments.") : NULL;
 	if (ac > 2)
-	{
-		ft_putendl("cd: Too many arguments.");
 		return ;
-	}
-	else if (ac == 1 || !ft_strcmp(av[1], "~"))
-		go_home(e);
-	else if (!ft_strcmp(av[1], "-"))
-		go_previous(e);
-	else
+	(ac == 1 || !ft_strcmp(av[1], "~")) ? go_home(e) : NULL;
+	(ac > 1 && !ft_strcmp(av[1], "-")) ? go_previous(e) : NULL;
+	if (ac > 1 && ft_strcmp(av[1], "-") && ft_strcmp(av[1], "~"))
 		go_to(av[1], e);
 	pwd = ft_strdup(getcwd(buf, PATH_SIZE));
-	if (!(av = set_av("PWD", ft_strncmp(pwd, "/Volumes/Data", 13) ?
-						pwd : pwd + 13, e, 1)))
+	home = get_env("HOME", e);
+	if (!(av = set_av("PWD", (ft_strncmp(pwd, "/Volumes/Data", 13) ||\
+	ft_strlen(pwd) < ft_strlen(home)) ? pwd : pwd + 13, e, 1)))
 		return ;
 	launch_builtin(av, e);
 	ft_memdel((void *)&pwd);
+	ft_memdel((void *)&home);
 	ft_freetab(av);
 }

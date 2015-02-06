@@ -6,7 +6,7 @@
 /*   By: mcanal <zboub@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/24 17:02:18 by mcanal            #+#    #+#             */
-/*   Updated: 2015/02/05 18:02:04 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/02/06 18:12:11 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ void	prompt(t_env *e)
 	user = get_env("USER", e);
 	pwd = get_env("PWD", e);
 	home = get_env("HOME", e);
-	i += ft_strnstr(pwd, "/private/", 9) ? 8 : 0;
-	i += ft_strnstr(pwd, "/Volumes/Data/", 14) ? 13 : 0;
 	if (ft_strnstr(pwd, home, ft_strlen(home)))
 	{
 		i += ft_strlen(home) - 1;
