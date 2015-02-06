@@ -6,7 +6,7 @@
 /*   By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 07:46:30 by mcanal            #+#    #+#             */
-/*   Updated: 2015/02/06 19:55:21 by mcanal           ###   ########.fr       */
+/*   Updated: 2015/02/06 20:12:05 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void	get_path(t_env *e)
 
 void	get_builtin(t_env *e)
 {
-	e->builtin = malloc(7 * sizeof(char *));
+	e->builtin = malloc(6 * sizeof(char *));
 	(e->builtin)[0] = ft_strdup("cd");
 	(e->builtin)[1] = ft_strdup("setenv");
 	(e->builtin)[2] = ft_strdup("unsetenv");
